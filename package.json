@@ -5,7 +5,7 @@
   "type": "module",
   "description": "browser build pipeline for the birdvirus kristal project",
   "scripts": {
-    "build:web": "node scripts/build-web.mjs",
+    "build:web": "node scripts/build-web.mjs && node scripts/verify-lovejs-page.mjs",
     "serve:web": "npx --yes serve dist"
   },
   "devDependencies": {
