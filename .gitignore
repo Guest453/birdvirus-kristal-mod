@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.build/
+.cache/
+*.love
+npm-debug.log*
