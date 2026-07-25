@@ -1,0 +1,12 @@
+event_inherited();
+vstop = 1;
+hstop = 0;
+image_speed = 0.25;
+image_angle = random(360);
+image_xscale = 2;
+image_yscale = 2;
+friction = 0;
+timer = 0;
+phase = 0;
+wall_destroy = false;
+x_offset = 0;

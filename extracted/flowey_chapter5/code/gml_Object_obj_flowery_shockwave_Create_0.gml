@@ -1,0 +1,13 @@
+event_inherited();
+image_speed = 0.25;
+image_yscale = 0;
+ys = 2.5;
+side = 0;
+alarm[0] = 1;
+gravity = 0.9;
+gravity_direction = 180;
+timer = 0;
+phase = 0;
+destroyonhit = 0;
+wall_destroy = false;
+x_offset = 0;

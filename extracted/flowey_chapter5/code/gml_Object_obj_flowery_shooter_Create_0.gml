@@ -1,0 +1,13 @@
+action = 0;
+image_xscale = 2;
+image_yscale = 2;
+xx = x;
+yy = y;
+counter = current_time;
+timer = 0;
+scale = 0;
+alpha = 0;
+reload = 0;
+spawnx = -24;
+spawny = 40;
+x_offset = 0;

@@ -1,0 +1,25 @@
+{
+    "id": "Birdvirus",
+    "name": "birdvirys",
+    "subtitle": "i cannot see you anymore as it is",
+
+    "version": "v1.0.0",
+    "engineVer": "v0.11.0-dev",
+
+    "dev": true,
+
+    "chapter": 4,
+
+    "map": "room_dark1",
+    "party": ["kris", "susie"],
+        "items": ["darkburger", "darkburger", "ultimate_candy"],
+        "key_items": ["cell_phone"],
+
+    "keybinds": [
+        {
+            "name": "Debug mode",
+            "id": "birdvirus_debug_mode",
+            "keys": ["["]
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+timer = 0;
+con = 0;
+type = 0;
+my_surface = -4;
+instance_create(camerax() + 200, cameray() + 410, obj_heartmarker);
+orange_heart = instance_create(obj_herokris.x + 10, obj_herokris.y + 40, obj_moveheart);
+orange_heart.orange = true;
+orange_heart.sprite_index = spr_orangeheart_white;
+orange_heart.image_blend = c_orange;
+orange_heart.depth = -999999;
+depth = -99999;
