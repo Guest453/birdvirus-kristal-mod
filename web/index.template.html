@@ -46,7 +46,6 @@
 
       window.onload = function () { window.focus(); };
       window.onclick = function () { window.focus(); };
-
       window.addEventListener("keydown", function (event) {
         if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) event.preventDefault();
       }, false);
@@ -64,9 +63,8 @@
           return canvas;
         })(),
         setStatus: function (text) {
-          if (text) {
-            drawLoadingText(text);
-          } else if (Module.remainingDependencies === 0) {
+          if (text) drawLoadingText(text);
+          else if (Module.remainingDependencies === 0) {
             document.getElementById("loadingCanvas").style.display = "none";
             document.getElementById("canvas").style.visibility = "visible";
           }
@@ -76,26 +74,33 @@
         monitorRunDependencies: function (left) {
           this.remainingDependencies = left;
           this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? "Preparing... (" + (this.totalDependencies - left) + "/" + this.totalDependencies + ")" : "All downloads complete.");
+          Module.setStatus(left ? "Preparing... (" + (this.totalDependencies - left) + "/" + this.totalDependencies + ")" : "Ready — click Start Game");
         }
       };
 
-      Module.setStatus("Downloading...");
+      Module.setStatus("Downloading game data...");
       window.onerror = function () {
         Module.setStatus("Exception thrown, see JavaScript console");
-        Module.setStatus = function (text) {
-          if (text) Module.printErr("[post-exception status] " + text);
-        };
       };
 
-      var applicationLoad = function () {
+      var gameStarted = false;
+      function startGame() {
+        if (gameStarted) return;
+        gameStarted = true;
+        document.getElementById("startGame").disabled = true;
+        document.getElementById("startGame").textContent = "Starting...";
         Love(Module);
-      };
+      }
     </script>
     <script type="text/javascript" src="game.js"></script>
-    <script async type="text/javascript" src="love.js" onload="applicationLoad()"></script>
+    <script type="text/javascript" src="love.js"></script>
     <footer>
-      <p>Built with <a href="https://github.com/Davidobot/love.js">love.js</a> <button onclick="goFullScreen();">Go Fullscreen</button><br>Hint: Reload the page if screen is blank</p>
+      <p>
+        Built with <a href="https://github.com/Davidobot/love.js">love.js</a>
+        <button id="startGame" onclick="startGame();">Start Game</button>
+        <button onclick="goFullScreen();">Go Fullscreen</button><br>
+        The browser build disables desktop-only Discord RPC and native HTTPS.
+      </p>
     </footer>
   </body>
 </html>
