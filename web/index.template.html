@@ -1,113 +1,101 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-us">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#07060d">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1, maximum-scale=1">
     <title>__TITLE__</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="theme/love.css">
   </head>
   <body>
-    <div class="background" aria-hidden="true"></div>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">kristal web</p>
-          <h1>__MOD_NAME__</h1>
-        </div>
-        <div class="actions">
-          <button id="fullscreen" type="button">fullscreen</button>
-          <button id="reload" type="button">reload</button>
-        </div>
-      </header>
+    <center>
+      <div>
+        <h1>__TITLE__</h1>
+        <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="800" height="600"></canvas>
+        <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+      </div>
+    </center>
 
-      <section class="game-frame" aria-label="__MOD_NAME__ game">
-        <canvas id="loadingCanvas" width="640" height="480" aria-label="loading screen"></canvas>
-        <canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()"></canvas>
-      </section>
-
-      <footer>
-        <span id="status">starting love.js…</span>
-        <span>project id: __MOD_ID__</span>
-      </footer>
-    </main>
-
-    <script>
-      const canvas = document.getElementById("canvas");
-      const loadingCanvas = document.getElementById("loadingCanvas");
-      const loadingContext = loadingCanvas.getContext("2d");
-      const statusText = document.getElementById("status");
-
-      function drawLoadingText(text) {
-        const width = loadingCanvas.width;
-        const height = loadingCanvas.height;
-        loadingContext.fillStyle = "#06050b";
-        loadingContext.fillRect(0, 0, width, height);
-        loadingContext.textAlign = "center";
-        loadingContext.fillStyle = "#ffffff";
-        loadingContext.font = "bold 28px monospace";
-        loadingContext.fillText("KRISTAL WEB", width / 2, height / 2 - 22);
-        loadingContext.fillStyle = "#9d8cff";
-        loadingContext.font = "16px monospace";
-        loadingContext.fillText(text || "loading…", width / 2, height / 2 + 18);
+    <script type="text/javascript">
+      function goFullScreen() {
+        var canvas = document.getElementById("canvas");
+        if (canvas.requestFullscreen) canvas.requestFullscreen();
+        else if (canvas.webkitRequestFullscreen) canvas.webkitRequestFullscreen();
+        else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
       }
 
-      window.addEventListener("load", () => canvas.focus());
-      window.addEventListener("click", () => canvas.focus());
-      window.addEventListener("keydown", (event) => {
-        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(event.key)) {
-          event.preventDefault();
-        }
-      }, { passive: false });
+      function FullScreenHook() {
+        var canvas = document.getElementById("canvas");
+        canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      }
 
-      document.getElementById("reload").addEventListener("click", () => location.reload());
-      document.getElementById("fullscreen").addEventListener("click", async () => {
-        try {
-          if (!document.fullscreenElement) await document.querySelector(".game-frame").requestFullscreen();
-          else await document.exitFullscreen();
-          canvas.focus();
-        } catch (error) {
-          console.error(error);
-        }
-      });
+      var loadingContext = document.getElementById("loadingCanvas").getContext("2d");
+      function drawLoadingText(text) {
+        var canvas = loadingContext.canvas;
+        loadingContext.fillStyle = "rgb(142, 195, 227)";
+        loadingContext.fillRect(0, 0, canvas.scrollWidth, canvas.scrollHeight);
+        loadingContext.font = "2em arial";
+        loadingContext.textAlign = "center";
+        loadingContext.fillStyle = "rgb(11, 86, 117)";
+        loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2);
+        loadingContext.fillText("Powered By Emscripten.", canvas.scrollWidth / 2, canvas.scrollHeight / 4);
+        loadingContext.fillText("Powered By LÖVE.", canvas.scrollWidth / 2, canvas.scrollHeight / 4 * 3);
+      }
 
-      const Module = {
+      window.onload = function () { window.focus(); };
+      window.onclick = function () { window.focus(); };
+
+      window.addEventListener("keydown", function (event) {
+        if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) event.preventDefault();
+      }, false);
+
+      var Module = {
         arguments: ["./game.love"],
         INITIAL_MEMORY: __INITIAL_MEMORY__,
-        print: console.log.bind(console),
         printErr: console.error.bind(console),
-        canvas,
-        setStatus(text) {
+        canvas: (function () {
+          var canvas = document.getElementById("canvas");
+          canvas.addEventListener("webglcontextlost", function (event) {
+            alert("WebGL context lost. You will need to reload the page.");
+            event.preventDefault();
+          }, false);
+          return canvas;
+        })(),
+        setStatus: function (text) {
           if (text) {
-            statusText.textContent = text;
             drawLoadingText(text);
           } else if (Module.remainingDependencies === 0) {
-            loadingCanvas.hidden = true;
-            canvas.style.visibility = "visible";
-            statusText.textContent = "running";
-            canvas.focus();
+            document.getElementById("loadingCanvas").style.display = "none";
+            document.getElementById("canvas").style.visibility = "visible";
           }
         },
         totalDependencies: 0,
         remainingDependencies: 0,
-        monitorRunDependencies(left) {
+        monitorRunDependencies: function (left) {
           this.remainingDependencies = left;
           this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? `loading ${this.totalDependencies - left}/${this.totalDependencies}` : "starting game…");
-        },
+          Module.setStatus(left ? "Preparing... (" + (this.totalDependencies - left) + "/" + this.totalDependencies + ")" : "All downloads complete.");
+        }
       };
 
-      Module.setStatus("downloading game…");
-      window.onerror = function (event) {
-        console.error(event);
-        statusText.textContent = "crashed — open the browser console";
+      Module.setStatus("Downloading...");
+      window.onerror = function () {
+        Module.setStatus("Exception thrown, see JavaScript console");
+        Module.setStatus = function (text) {
+          if (text) Module.printErr("[post-exception status] " + text);
+        };
       };
 
-      function applicationLoad() {
+      var applicationLoad = function () {
         Love(Module);
-      }
+      };
     </script>
-    <script src="game.js"></script>
-    <script async src="love.js" onload="applicationLoad()"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script async type="text/javascript" src="love.js" onload="applicationLoad()"></script>
+    <footer>
+      <p>Built with <a href="https://github.com/Davidobot/love.js">love.js</a> <button onclick="goFullScreen();">Go Fullscreen</button><br>Hint: Reload the page if screen is blank</p>
+    </footer>
   </body>
 </html>
