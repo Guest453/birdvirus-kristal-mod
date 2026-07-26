@@ -35,6 +35,11 @@ function BirdDash:onStart()
         {side = "top",   offset = 5.78, charge = 0.58, speed = 10.8},
         {side = "left",  offset = 6.02, charge = 0.58, speed = 10.8},
         {side = "right", offset = 6.30, charge = 0.52, speed = 11.0},
+        {side = "top",   offset = 6.55, charge = 0.52, speed = 11.0},
+        {side = "left",  offset = 6.80, charge = 0.50, speed = 11.2},
+        {side = "right", offset = 7.02, charge = 0.50, speed = 11.2},
+        {side = "top",   offset = 7.24, charge = 0.48, speed = 11.5},
+        {side = "left",  offset = 7.46, charge = 0.48, speed = 11.5},
     }
 
     for spawn_index, spawn in ipairs(spawns) do

@@ -253,7 +253,6 @@ function Dummy:selectWave()
         "virus_chase_burst",
         "virus_explosions",
         "knight_boxsplit_rain",
-        "giant_bomb",
     }
     self.selected_wave = normal_cycle[((self.attack_count - 1) % #normal_cycle) + 1]
     return self.selected_wave
