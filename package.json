@@ -1,0 +1,15 @@
+{
+  "name": "birdvirus-kristal-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "browser build pipeline for the birdvirus kristal project",
+  "scripts": {
+    "build:web": "node scripts/build-web-v2.mjs && node scripts/verify-lovejs-page.mjs",
+    "serve:web": "npx --yes serve dist"
+  },
+  "devDependencies": {
+    "archiver": "7.0.1",
+    "love.js": "11.4.1"
+  }
+}
